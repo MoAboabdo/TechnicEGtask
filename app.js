@@ -5,11 +5,12 @@ const User = require("./models/user");
 
 const app = express();
 
+app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
 // Define Routes
 app.use("/api/tasks", require("./routes/task"));
-app.use("/api/auth", require("./routes/auth"));
+app.use("/api", require("./routes/auth"));
 
 sequelize
   .sync()
@@ -27,7 +28,7 @@ sequelize
     return user;
   })
   .then(() => {
-    app.listen(3000);
+    app.listen(5000);
   })
   .catch((err) => {
     console.log(err);

@@ -1,16 +1,34 @@
 const express = require("express");
 const router = express.Router();
 const jwt = require("jsonwebtoken");
-const config = require("config");
+// const config = require("config");
 const User = require("../models/User");
-const bcrypt = require("bcryptjs");
+const auth = require("../middleware/auth");
+const {
+  generateRefreshToken,
+  generateToken,
+} = require("../util/generateToken");
 
-// @route     POST api/auth
+let refreshTokens = [];
+
+// @route     GET api/auth
+// @desc      Get logged in user
+// @access    Private
+router.get("/auth", auth, async (req, res) => {
+  try {
+    const user = await User.findByPk(req.user.id).select("-password");
+    res.json(user);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send("Server Error");
+  }
+});
+// @route     POST api/login
 // @desc      Auth user & get token
 // @access    Public
-router.post("/", async (req, res) => {
+router.post("/login", async (req, res) => {
   const { email, password, role } = req.body;
-
+  let isMatch;
   try {
     let user = await User.findOne({ email });
 
@@ -18,33 +36,45 @@ router.post("/", async (req, res) => {
       return res.status(400).json({ msg: "Invalid Credentials" });
     }
 
-    const isMatch = await bcrypt.compare(password, user.password);
+    password === user.password ? (isMatch = true) : (isMatch = false);
 
     if (!isMatch) {
       return res.status(400).json({ msg: "Invalid Credentials" });
     }
+    let accessToken = generateToken(user.id);
+    let refreshToken = generateRefreshToken(user.id);
+    refreshTokens.push(refreshToken);
 
-    const payload = {
-      user: {
-        id: user.id,
-      },
-    };
-
-    jwt.sign(
-      payload,
-      config.get("jwtSecret"),
-      {
-        expiresIn: 300,
-      },
-      (err, token) => {
-        if (err) throw err;
-        res.json({ token, role });
-      }
-    );
+    res.json({
+      accessToken: accessToken,
+      refreshToken: refreshToken,
+      role: role,
+    });
   } catch (err) {
     console.error(err.message);
     res.status(500).send("Server Error");
   }
+});
+
+router.post("/refreshToken", (req, res, next) => {
+  const refreshToken = req.body.token;
+  if (!refreshToken || !refreshTokens.includes(refreshToken)) {
+    return res
+      .status(403)
+      .json({ messgae: "Refresh Token not found, login again " });
+  }
+  jwt.verify(refreshToken, "refreshToken", (err, user) => {
+    if (!err) {
+      const accessToken = jwt.sign({ id: user.id }, "accessToken", {
+        expiresIn: "300",
+      });
+      return res.status(201).json({ success: true, accessToken });
+    } else {
+      return res
+        .status(403)
+        .json({ success: false, message: "Invalid refresh token" });
+    }
+  });
 });
 
 module.exports = router;
