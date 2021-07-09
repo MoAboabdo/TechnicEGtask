@@ -3,14 +3,22 @@ import axios from "axios";
 import AuthContext from "./authContext";
 import authReducer from "./authReducer";
 import setAuthToken from "../../utils/setAuthToken";
-import { LOGIN_SUCCESS, LOGIN_FAIL, LOGOUT, CLEAR_ERRORS } from "../types";
+import {
+  LOGIN_SUCCESS,
+  LOGIN_FAIL,
+  LOGOUT,
+  CLEAR_ERRORS,
+  USER_LOADED,
+  AUTH_ERROR,
+} from "../types";
 
 const AuthState = (props) => {
   const initialState = {
     accessToken: localStorage.getItem("accessToken"),
+    refreshToken: localStorage.getItem("refreshToken"),
     isAuthenticated: null,
     loading: true,
-    user: null,
+    userInfo: null,
     error: null,
   };
 
@@ -19,7 +27,6 @@ const AuthState = (props) => {
   // Load User
   const loadUser = async () => {
     setAuthToken(localStorage.accessToken);
-    setAuthToken(localStorage.refreshToken);
 
     try {
       const res = await axios.get("/api/auth");
@@ -42,7 +49,7 @@ const AuthState = (props) => {
     };
 
     try {
-      const res = await axios.post("/api/login", formData, config);
+      const res = await axios.post("/api/auth", formData, config);
 
       dispatch({
         type: LOGIN_SUCCESS,
@@ -68,11 +75,11 @@ const AuthState = (props) => {
     <AuthContext.Provider
       value={{
         accessToken: state.accessToken,
+        refreshToken: state.refreshToken,
         isAuthenticated: state.isAuthenticated,
         loading: state.loading,
-        user: state.user,
+        userInfo: state.userInfo,
         error: state.error,
-        register,
         loadUser,
         login,
         logout,

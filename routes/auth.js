@@ -14,7 +14,7 @@ let refreshTokens = [];
 // @route     GET api/auth
 // @desc      Get logged in user
 // @access    Private
-router.get("/auth", auth, async (req, res) => {
+router.get("/", auth, async (req, res) => {
   try {
     const user = await User.findByPk(req.user.id).select("-password");
     res.json(user);
@@ -23,10 +23,10 @@ router.get("/auth", auth, async (req, res) => {
     res.status(500).send("Server Error");
   }
 });
-// @route     POST api/login
+// @route     POST api/auth
 // @desc      Auth user & get token
 // @access    Public
-router.post("/login", async (req, res) => {
+router.post("/", async (req, res) => {
   const { email, password, role } = req.body;
   let isMatch;
   try {

@@ -5,13 +5,13 @@ const User = require("./models/user");
 
 const app = express();
 
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
+app.use(express.json({ extended: false }));
 
 // Define Routes
 app.use("/api/tasks", require("./routes/task"));
-app.use("/api", require("./routes/auth"));
+app.use("/api/auth", require("./routes/auth"));
 
+const PORT = process.env.PORT || 5000;
 sequelize
   .sync()
   .then((result) => {
@@ -27,9 +27,8 @@ sequelize
     }
     return user;
   })
-  .then(() => {
-    app.listen(5000);
-  })
   .catch((err) => {
     console.log(err);
   });
+
+app.listen(PORT, () => console.log(`Server started on port ${PORT}`));

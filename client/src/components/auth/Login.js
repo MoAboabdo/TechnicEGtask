@@ -1,17 +1,63 @@
 import React, { useState, useContext, useEffect } from "react";
 import AuthContext from "../../context/auth/authContext";
 import AlertContext from "../../context/alert/alertContext";
+import axios from "axios";
 
 const Login = (props) => {
   const alertContext = useContext(AlertContext);
   const authContext = useContext(AuthContext);
 
   const { setAlert } = alertContext;
-  const { login, error, clearErrors, isAuthenticated } = authContext;
+  const {
+    login,
+    error,
+    clearErrors,
+    isAuthenticated,
+    accessToken,
+    refreshToken,
+    userInfo,
+  } = authContext;
 
-  useEffect(() => {
+  // const refresh = (refreshToken) => {
+  //   console.log("Refreshing token!");
+
+  //   return new Promise(async (resolve, reject) => {
+  //     const res = await axios.post("http://localhost:5000/api/refreshToken", {
+  //       token: refreshToken,
+  //     });
+
+  //     if (res.data.success === false) {
+  //       setAlert("Login again", "danger");
+  //       // set message and return.
+  //       resolve(false);
+  //     } else {
+  //       const { accessToken } = res.data;
+  //       localStorage.setItem("accessToken", accessToken);
+  //       resolve(accessToken);
+  //     }
+  //   });
+  // };
+
+  // const hasAccess = async (accessToken, refreshToken) => {
+  //   if (!refreshToken) return null;
+
+  //   if (accessToken === undefined) {
+  //     // generate new accessToken
+  //     accessToken = await refresh(refreshToken);
+  //     return accessToken;
+  //   }
+
+  //   return accessToken;
+  // };
+
+  useEffect(async () => {
     if (isAuthenticated) {
-      props.history.push("/");
+      props.history.push("/client");
+
+      // if (userInfo.role === "client") {
+      // } else {
+      //   props.history.push("/login");
+      // }
     }
 
     if (error === "Invalid Credentials") {
