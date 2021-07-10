@@ -11,7 +11,7 @@ const User = sequelize.define("user", {
   },
   email: Sequelize.STRING,
   password: Sequelize.STRING,
-  role: Sequelize.STRING,
+  role: { type: Sequelize.STRING, default: "client" },
 });
 
 module.exports = User;

@@ -27,10 +27,10 @@ router.get("/", auth, async (req, res) => {
 // @desc      Auth user & get token
 // @access    Public
 router.post("/", async (req, res) => {
-  const { email, password, role } = req.body;
+  const { email, password } = req.body;
   let isMatch;
   try {
-    let user = await User.findOne({ email });
+    let user = await User.findOne({ where: { email: email } });
 
     if (!user) {
       return res.status(400).json({ msg: "Invalid Credentials" });
@@ -41,14 +41,19 @@ router.post("/", async (req, res) => {
     if (!isMatch) {
       return res.status(400).json({ msg: "Invalid Credentials" });
     }
-    let accessToken = generateToken(user.id);
-    let refreshToken = generateRefreshToken(user.id);
+    const payload = {
+      user: {
+        id: user.id,
+      },
+    };
+    let accessToken = generateToken(payload);
+    let refreshToken = generateRefreshToken(payload);
     refreshTokens.push(refreshToken);
 
     res.json({
-      accessToken: accessToken,
+      token: accessToken,
       refreshToken: refreshToken,
-      role: role,
+      role: user.role,
     });
   } catch (err) {
     console.error(err.message);

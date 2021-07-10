@@ -2,14 +2,18 @@ const express = require("express");
 
 const sequelize = require("./util/database");
 const User = require("./models/user");
+const Task = require("./models/task");
 
 const app = express();
 
 app.use(express.json({ extended: false }));
 
 // Define Routes
-app.use("/api/tasks", require("./routes/task"));
+app.use("/api", require("./routes/task"));
 app.use("/api/auth", require("./routes/auth"));
+
+Task.belongsTo(User, { constrains: true, onDelete: "CASCADE" });
+User.hasMany(Task);
 
 const PORT = process.env.PORT || 5000;
 sequelize

@@ -16,23 +16,26 @@ export default (state, action) => {
         userInfo: action.payload,
       };
     case LOGIN_SUCCESS:
-      localStorage.setItem("accessToken", action.payload.accessToken);
+      localStorage.setItem("accessToken", action.payload.token);
       localStorage.setItem("refreshToken", action.payload.refreshToken);
       return {
         ...state,
         ...action.payload,
+        userInfo: action.payload,
         isAuthenticated: true,
         loading: false,
       };
     case LOGIN_FAIL:
     case LOGOUT:
-      localStorage.removeItem("token");
+      localStorage.removeItem("accessToken");
+      localStorage.removeItem("refreshToken");
+
       return {
         ...state,
         token: null,
+        refreshToken: null,
         isAuthenticated: false,
         loading: false,
-        user: null,
         error: action.payload,
       };
     case CLEAR_ERRORS:

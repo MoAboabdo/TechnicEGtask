@@ -1,31 +1,120 @@
-exports.postAddTask = async (req, res, next) => {
-  const title = req.body.title;
-  const price = req.body.price;
-  const description = req.body.description;
+const Task = require("../models/task");
 
-  try {
-    const tasks = await req.user.createTask({
-      title: title,
-      price: price,
-      description: description,
-    });
-    console.log("Created Task");
-    res.json(tasks);
-  } catch (err) {
-    console.log(err);
-  }
-};
-
-exports.getTasks = async (req, res, next) => {
-  try {
-    const tasks = await req.user.getTasks();
-
-    if (!tasks) {
-      res.status(400).json({ msg: "Tasks Not Found!" });
+const TaskController = {
+  getAllTasks: async (req, res) => {
+    try {
+      const tasks = await Task.findAll({});
+      res.json(tasks);
+    } catch (err) {
+      console.error(err.message);
+      res.status(500).send("Server Error");
     }
+  },
+  createTask: async (req, res) => {
+    const { title, description, price, status, done, paid } = req.body;
 
-    res.json(tasks);
-  } catch (err) {
-    console.log(err);
-  }
+    try {
+      const task = await Task.create({
+        title,
+        description,
+        price,
+        status,
+        done,
+        paid,
+        userId: req.user.id,
+      });
+      res.json(task);
+    } catch (err) {
+      console.error(err.message);
+      res.status(500).send("Server Error");
+    }
+  },
+  getTodoTask: async (req, res) => {
+    try {
+      const tasks = await Task.findAll({ where: { status: "Todo" } });
+      res.json(tasks);
+    } catch (err) {
+      console.error(err.message);
+      res.status(500).send("Server Error");
+    }
+  },
+  getInProgressTask: async (req, res) => {
+    try {
+      const tasks = await Task.findAll({ where: { status: "Inprogress" } });
+      res.json(tasks);
+    } catch (err) {
+      console.error(err.message);
+      res.status(500).send("Server Error");
+    }
+  },
+  getTestingTask: async (req, res) => {
+    try {
+      const tasks = await Task.findAll({ where: { status: "Testing" } });
+      res.json(tasks);
+    } catch (err) {
+      console.error(err.message);
+      res.status(500).send("Server Error");
+    }
+  },
+  getPaidTask: async (req, res) => {
+    try {
+      const tasks = await Task.findAll({ where: { status: "Paid" } });
+      res.json(tasks);
+    } catch (err) {
+      console.error(err.message);
+      res.status(500).send("Server Error");
+    }
+  },
+  getDoneTask: async (req, res) => {
+    try {
+      const tasks = await Task.findAll({ where: { done: true } });
+      res.json(tasks);
+    } catch (err) {
+      console.error(err.message);
+      res.status(500).send("Server Error");
+    }
+  },
+  getNotDoneTask: async (req, res) => {
+    try {
+      const tasks = await Task.findAll({ where: { done: true } });
+      res.json(tasks);
+    } catch (err) {
+      console.error(err.message);
+      res.status(500).send("Server Error");
+    }
+  },
+  getTask: async (req, res) => {
+    try {
+      const oneTask = await Task.findOne({ where: { id: req.params.id } });
+      res.json(oneTask);
+    } catch (err) {
+      console.error(err.message);
+      res.status(500).send("Server Error");
+    }
+  },
+  updateTask: async (req, res) => {
+    let { title, description, price, status, done, paid } = req.body;
+
+    try {
+      const task = await Task.findOne({ where: { id: req.params.id } });
+
+      if (!task) {
+        res.status(400).json({ msg: "Task Not found" });
+      }
+      task.update({
+        title,
+        description,
+        price,
+        status,
+        done,
+        paid,
+      });
+      res.status(200).json({ msg: "Updated Successfully" });
+    } catch (err) {
+      console.error(err.message);
+      res.status(500).send("Server Error");
+    }
+  },
 };
+
+module.exports = TaskController;

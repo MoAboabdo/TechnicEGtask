@@ -12,7 +12,15 @@ const Task = sequelize.define("task", {
   title: Sequelize.STRING,
   description: Sequelize.STRING,
   price: Sequelize.DOUBLE,
-  Wallet: Sequelize.INTEGER,
+  status: Sequelize.STRING,
+  done: {
+    type: Sequelize.BOOLEAN,
+    default: false,
+  },
+  paid: {
+    type: Sequelize.BOOLEAN,
+    default: false,
+  },
 });
 
-module.exports = User;
+module.exports = Task;

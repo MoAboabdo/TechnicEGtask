@@ -1,7 +1,7 @@
 import React, { useState, useContext, useEffect } from "react";
 import AuthContext from "../../context/auth/authContext";
 import AlertContext from "../../context/alert/alertContext";
-import axios from "axios";
+// import axios from "axios";
 
 const Login = (props) => {
   const alertContext = useContext(AlertContext);
@@ -13,8 +13,7 @@ const Login = (props) => {
     error,
     clearErrors,
     isAuthenticated,
-    accessToken,
-    refreshToken,
+
     userInfo,
   } = authContext;
 
@@ -52,12 +51,7 @@ const Login = (props) => {
 
   useEffect(async () => {
     if (isAuthenticated) {
-      props.history.push("/client");
-
-      // if (userInfo.role === "client") {
-      // } else {
-      //   props.history.push("/login");
-      // }
+      props.history.push("/Home");
     }
 
     if (error === "Invalid Credentials") {
@@ -65,7 +59,7 @@ const Login = (props) => {
       clearErrors();
     }
     // eslint-disable-next-line
-  }, [error, isAuthenticated, props.history]);
+  }, [error, isAuthenticated, props.history, userInfo]);
 
   const [user, setUser] = useState({
     email: "",
