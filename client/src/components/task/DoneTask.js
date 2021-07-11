@@ -5,23 +5,12 @@ import axios from "axios";
 
 const DoneTask = () => {
   const [tasks, setTasks] = useState([]);
-  const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
-    axios.get("http://localhost:8000/api/tasks/high").then((res) => {
+    axios.get("/api/tasks/done").then((res) => {
       setTasks(res.data);
-      setLoaded(true);
     });
   }, []);
-
-  const deleteTask = (taskID) => {
-    axios
-      .delete("http://localhost:8000/api/task/" + taskID + "/delete")
-      .then((res) => {
-        console.log(res);
-      });
-    window.location.reload(true);
-  };
 
   return (
     <div className={styles.background}>
@@ -32,28 +21,17 @@ const DoneTask = () => {
           <th>Description</th>
           <th>Price</th>
           <th>Status</th>
-
-          <th></th>
         </tr>
-        {tasks.map((task, idx) => {
+        {tasks.map((task) => {
           return (
             <>
-              <tr key={idx}>
+              <tr key={task.id}>
                 <td>
                   <Link to={"/tasks/" + task.id}>{task.title}</Link>
                 </td>
                 <td>{task.description}</td>
                 <td>{task.price}</td>
                 <td className={styles.High}>{task.status}</td>
-                <td>
-                  <button
-                    onClick={(e) => {
-                      deleteTask(task.id);
-                    }}
-                  >
-                    Complete
-                  </button>
-                </td>
               </tr>
             </>
           );

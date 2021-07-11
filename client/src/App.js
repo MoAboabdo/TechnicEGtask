@@ -28,14 +28,13 @@ function App() {
       <AlertState>
         <div className="App">
           <Navbar />
-          <Sidebar />
-          <Router>
-            <Fragment>
-              <div className="container page">
+          <div className="container page">
+            <Router>
+              <Fragment>
                 <Alerts />
                 <Switch>
-                  <PrivateRoute exact path="/Home" component={Main} />
-
+                  <PrivateRoute exact path="/Main" component={Main} />
+                  <PrivateRoute exact path="/tasks/new" component={TodoForm} />
                   <PrivateRoute exact path="/task/todo" component={Todo} />
                   <PrivateRoute
                     exact
@@ -48,12 +47,9 @@ function App() {
                     component={Testing}
                   />
                   <PrivateRoute exact path="/task/done" component={DoneTask} />
-
                   <PrivateRoute exact path="/task/paid" component={Paid} />
 
-                  <PrivateRoute exact path="/tasks/new" component={TodoForm} />
                   <PrivateRoute exact path="/tasks/:id" component={Details} />
-
                   <PrivateRoute
                     exact
                     path="/tasks/:id/edit"
@@ -62,9 +58,9 @@ function App() {
 
                   <Route exact path="/" component={Login} />
                 </Switch>
-              </div>
-            </Fragment>
-          </Router>
+              </Fragment>
+            </Router>
+          </div>
         </div>
       </AlertState>
     </AuthState>

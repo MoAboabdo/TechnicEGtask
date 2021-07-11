@@ -7,9 +7,7 @@ const Details = (props) => {
   const [task, setTasks] = useState({});
 
   useEffect(() => {
-    axios
-      .get("http://localhost:5000/api/task/" + props.id)
-      .then((res) => setTasks(res.data));
+    axios.get("/api/task/" + props.id).then((res) => setTasks(res.data));
   }, []);
 
   const editTask = (taskID) => {
@@ -20,7 +18,6 @@ const Details = (props) => {
     <div className={styles.background}>
       <h2>Details about: {task.title} Task</h2>
 
-      {/* <button onClick={(e) => { deleteTask(task._id) }}> Completed </button> */}
       <button
         onClick={(e) => {
           editTask(task.id);

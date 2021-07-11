@@ -14,7 +14,7 @@ const Update = (props) => {
 
   useEffect(() => {
     //gets the task that we are updating
-    axios.get("http://localhost:5000/api/task/" + id).then((res) => {
+    axios.get("/api/task/" + id).then((res) => {
       setTitle(res.data.title);
       setDescription(res.data.description);
       setPrice(res.data.price);
@@ -27,7 +27,7 @@ const Update = (props) => {
   const updateTask = (e) => {
     e.preventDefault();
     axios
-      .post("http://localhost:5000/api/tasks/" + id + "/update", {
+      .post("/api/tasks/" + id + "/update", {
         title,
         description,
         price,

@@ -4,12 +4,12 @@ import AuthContext from "./authContext";
 import authReducer from "./authReducer";
 import setAuthToken from "../../utils/setAuthToken";
 import {
+  USER_LOADED,
+  AUTH_ERROR,
   LOGIN_SUCCESS,
   LOGIN_FAIL,
   LOGOUT,
   CLEAR_ERRORS,
-  USER_LOADED,
-  AUTH_ERROR,
 } from "../types";
 
 const AuthState = (props) => {
@@ -18,13 +18,12 @@ const AuthState = (props) => {
     refreshToken: localStorage.getItem("refreshToken"),
     isAuthenticated: null,
     loading: true,
-    userInfo: null,
+    user: null,
     error: null,
   };
 
   const [state, dispatch] = useReducer(authReducer, initialState);
 
-  // Load User
   const loadUser = async () => {
     setAuthToken(localStorage.accessToken);
 
@@ -78,7 +77,7 @@ const AuthState = (props) => {
         refreshToken: state.refreshToken,
         isAuthenticated: state.isAuthenticated,
         loading: state.loading,
-        userInfo: state.userInfo,
+        user: state.user,
         error: state.error,
         loadUser,
         login,

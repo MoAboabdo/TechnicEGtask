@@ -1,5 +1,6 @@
 import {
   USER_LOADED,
+  AUTH_ERROR,
   LOGIN_SUCCESS,
   LOGIN_FAIL,
   LOGOUT,
@@ -13,7 +14,7 @@ export default (state, action) => {
         ...state,
         isAuthenticated: true,
         loading: false,
-        userInfo: action.payload,
+        user: action.payload,
       };
     case LOGIN_SUCCESS:
       localStorage.setItem("accessToken", action.payload.token);
@@ -21,10 +22,10 @@ export default (state, action) => {
       return {
         ...state,
         ...action.payload,
-        userInfo: action.payload,
         isAuthenticated: true,
         loading: false,
       };
+    case AUTH_ERROR:
     case LOGIN_FAIL:
     case LOGOUT:
       localStorage.removeItem("accessToken");

@@ -1,4 +1,7 @@
 const express = require("express");
+const cors = require('cors') // This is new
+const dotenv = require ('dotenv')
+
 
 const sequelize = require("./util/database");
 const User = require("./models/user");
@@ -7,6 +10,8 @@ const Task = require("./models/task");
 const app = express();
 
 app.use(express.json({ extended: false }));
+app.use(cors()) // This is new
+dotenv.config()
 
 // Define Routes
 app.use("/api", require("./routes/task"));

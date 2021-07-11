@@ -5,23 +5,12 @@ import axios from "axios";
 
 const Inprogress = () => {
   const [tasks, setTasks] = useState([]);
-  const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
-    axios.get("http://localhost:8000/api/tasks/low").then((res) => {
+    axios.get("/api/tasks/inProgress").then((res) => {
       setTasks(res.data);
-      setLoaded(true);
     });
   }, []);
-
-  const deleteTask = (taskID) => {
-    axios
-      .delete("http://localhost:8000/api/task/" + taskID + "/delete")
-      .then((res) => {
-        console.log(res);
-      });
-    window.location.reload(true);
-  };
 
   return (
     <div className={styles.background}>
@@ -35,26 +24,16 @@ const Inprogress = () => {
 
           <th></th>
         </tr>
-        {tasks.map((task, idx) => {
+        {tasks.map((task) => {
           return (
             <>
-              <tr key={idx}>
+              <tr key={task.id}>
                 <td>
                   <Link to={"/tasks/" + task.id}>{task.title}</Link>
                 </td>
                 <td>{task.description}</td>
                 <td>{task.price}</td>
                 <td className={styles.Low}>{task.status}</td>
-
-                <td>
-                  <button
-                    onClick={(e) => {
-                      deleteTask(task.id);
-                    }}
-                  >
-                    Complete
-                  </button>
-                </td>
               </tr>
             </>
           );

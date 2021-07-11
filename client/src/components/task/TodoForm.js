@@ -15,7 +15,7 @@ const TodoForm = () => {
   const onSubmitHandler = (e) => {
     e.preventDefault();
     axios
-      .post("http://localhost:5000/api/task/new", {
+      .post("/api/task/new", {
         title,
         description,
         price,

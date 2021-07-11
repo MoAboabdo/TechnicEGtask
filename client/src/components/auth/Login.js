@@ -8,14 +8,7 @@ const Login = (props) => {
   const authContext = useContext(AuthContext);
 
   const { setAlert } = alertContext;
-  const {
-    login,
-    error,
-    clearErrors,
-    isAuthenticated,
-
-    userInfo,
-  } = authContext;
+  const { login, error, clearErrors, isAuthenticated } = authContext;
 
   // const refresh = (refreshToken) => {
   //   console.log("Refreshing token!");
@@ -49,7 +42,7 @@ const Login = (props) => {
   //   return accessToken;
   // };
 
-  useEffect(async () => {
+  useEffect(() => {
     if (isAuthenticated) {
       props.history.push("/Home");
     }
@@ -59,7 +52,7 @@ const Login = (props) => {
       clearErrors();
     }
     // eslint-disable-next-line
-  }, [error, isAuthenticated, props.history, userInfo]);
+  }, [error, isAuthenticated, props.history]);
 
   const [user, setUser] = useState({
     email: "",

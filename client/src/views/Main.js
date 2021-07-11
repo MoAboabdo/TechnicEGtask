@@ -6,12 +6,19 @@ const Main = (props) => {
   const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
-    axios.get("http://localhost:5000/api/tasks/notDone").then((res) => {
+    axios.get("/api/tasks/notDone").then((res) => {
       setTasks(res.data);
       setLoaded(true);
     });
   }, []);
+  const removeFromDom = (tasksID) => {
+    setTasks(tasks.filter((tasks) => tasks._id !== tasksID));
+  };
 
-  return <div>{loaded && <TodoList tasks={tasks} />}</div>;
+  return (
+    <div>
+      {loaded && <TodoList tasks={tasks} removeFromDom={removeFromDom} />}
+    </div>
+  );
 };
 export default Main;
